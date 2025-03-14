@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/MySpace.css">
+    <title>MySpace - RentEase</title>
+</head>
+<body>
+    <section id="flat-list">
+        <h3>Your Favorite Flats</h3>
+        <div id="flats-container"></div>
+    </section>
+
+    <script>
+      // Check if the user is logged in
+      const loggedInUser = localStorage.getItem("loggedInUser");
+      let user = null;
+
+      if (loggedInUser) {
+          user = JSON.parse(loggedInUser); // Parse the logged-in user data
+      }
+
+      if (user) {
+          // Retrieve the user's favorites from localStorage
+          let userFavorites = [];
+          const favoritesKey = `favorites_${user.email}`;
+          
+          if (localStorage.getItem(favoritesKey)) {
+              userFavorites = JSON.parse(localStorage.getItem(favoritesKey));
+          }
+
+          // Check if there are any favorites
+          const flatsContainer = document.getElementById("flats-container");
+
+          if (userFavorites.length > 0) {
+              // Display favorite flats on the page
+              userFavorites.forEach(flat => {
+                  const flatElement = document.createElement("div");
+                  flatElement.classList.add("flat-item");
+                  flatElement.innerHTML = `
+                      <img src="${flat.image}" alt="Flat Image" width="200">
+                      <p><strong>City:</strong> ${flat.city}</p>
+                      <p><strong>Street:</strong> ${flat.street} ${flat.number}</p>
+                      <p><strong>Size:</strong> ${flat.size} sqm</p>
+                      <p><strong>AC:</strong> ${flat.hasAC ? "Yes" : "No"}</p>
+                      <p><strong>Year Built:</strong> ${flat.year}</p>
+                      <p><strong>Rent:</strong> $${flat.rent}/month</p>
+                      <p><strong>Available:</strong> ${flat.available}</p>
+                      <button class="delete-btn" data-id="${flat.id}">Delete from Favorites</button>
+                  `;
+                  flatsContainer.appendChild(flatElement);
+              });
+
+              // Add event listeners to the delete buttons
+              const deleteButtons = document.querySelectorAll(".delete-btn");
+              deleteButtons.forEach(button => {
+                  button.addEventListener("click", function() {
+                      const flatId = parseInt(this.getAttribute("data-id"));
+                      // Remove the flat from the favorites array
+                      userFavorites = userFavorites.filter(flat => flat.id !== flatId);
+
+                      // Update the localStorage with the new favorites array
+                      localStorage.setItem(favoritesKey, JSON.stringify(userFavorites));
+
+                      // Refresh the page to show updated favorites list
+                      window.location.reload();
+                  });
+              });
+          } else {
+              flatsContainer.innerHTML = "<p>You don't have any favorites yet.</p>";
+          }
+      } else {
+          alert("Please log in to view your favorites.");
+      }
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - RentEase</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <header>
+    <h1>RentEase</h1>
+    <nav>
+      <a href="MainPage.html">Home</a>
+    </nav>
+  </header>
+  <main>
+    <section class="login-container">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <button type="submit" id="log-in">Login</button>
+      </form>
+      <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </section>
+  </main>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find(u => u.email === email && u.password === password);
+      if (user) {
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        window.location.href = "dashboard.html";  // Renamed file for dashboard
+      } else {
+        alert("Invalid email or password.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - RentEase</title>
+    <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+    <header>
+        <h1>RentEase</h1>
+        <nav>
+            <a href="Main Page.html">Home</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="register-container">
+            
+            <h2>Register</h2>
+            <form id="registerForm">
+                <label for="Name">Name:</label>
+                <input type="text" id="Name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+
+                <button type="submit">Register</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('Name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const age = parseInt(document.getElementById('age').value);
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (!name || !email || !age || !password || !confirmPassword) {
+                alert('All fields are required.');
+                return;
+            }
+
+            if (name.length < 2 ) {
+                alert('name  must be at least 2 characters long.');
+                return;
+            }
+
+            if (age < 18 || age > 120) {
+                alert('Age must be between 18 and 120.');
+                return;
+            }
+
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email.');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                return;
+            }
+
+            const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$/;
+            if (!passwordPattern.test(password)) {
+                alert('Password must contain letters, numbers, and a special character.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return;
+            }
+
+            // Check if email is already registered
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            if (users.some(user => user.email === email)) {
+                alert('This email is already registered.');
+                return;
+            }
+
+            // Store new user
+            const newUser = { name, email, age, password };
+            users.push(newUser);
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert('Registration successful! You can now log in.');
+            window.location.href = "login.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>

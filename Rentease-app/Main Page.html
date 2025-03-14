@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page - RentEase</title>
+    <link rel="stylesheet" href="css/main page.css">
+</head>
+<body>
+    <header>
+        <h1>RentEase</h1>
+        <nav>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Top container with filter -->
+        <div id="top-container">
+            <div id="filter-section">
+                <h2>Filter Flats</h2>
+                <form id="filter-form">
+                    <label for="city">City:</label>
+                    <select id="city">
+                        <option value="all">All</option>
+                        <option value="New York">New York</option>
+                        <option value="Los Angeles">Los Angeles</option>
+                        <!-- Add more cities as needed -->
+                    </select>
+
+                    <label for="min-size">Size (Min):</label>
+                    <input type="number" id="min-size" placeholder="Min size in sqm">
+
+                    <label for="max-size">Size (Max):</label>
+                    <input type="number" id="max-size" placeholder="Max size in sqm">
+
+                    <label for="ac">AC:</label>
+                    <select id="ac">
+                        <option value="all">All</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+
+                    <label for="min-year">Year Built (Min):</label>
+                    <input type="number" id="min-year" placeholder="Min year">
+
+                    <label for="max-year">Year Built (Max):</label>
+                    <input type="number" id="max-year" placeholder="Max year">
+
+                    <label for="min-rent">Rent (Min):</label>
+                    <input type="number" id="min-rent" placeholder="Min rent">
+
+                    <label for="max-rent">Rent (Max):</label>
+                    <input type="number" id="max-rent" placeholder="Max rent">
+
+                    <label for="available-before">Available Before:</label>
+                    <input type="date" id="available-before">
+
+                    <button type="submit">Apply Filters</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Flats container -->
+        <section id="flats-container">
+            <h2>Available Flats</h2>
+            <!-- Flats will be dynamically loaded here -->
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let flats = [
+                { id: 1, city: "New York", street: "Broadway", number: 101, size: 75, hasAC: true, year: 2001, rent: 1400, available: "2024-01-15", image: "flat1.png" },
+                { id: 2, city: "Los Angeles", street: "Sunset Blvd", number: 202, size: 95, hasAC: false, year: 2005, rent: 1600, available: "2024-02-20", image: "flat2.png" },
+                { id: 3, city: "Chicago", street: "Michigan Ave", number: 303, size: 85, hasAC: true, year: 2010, rent: 1500, available: "2024-03-25", image: "flat3.png" },
+                { id: 4, city: "Houston", street: "Main St", number: 404, size: 110, hasAC: true, year: 2012, rent: 1700, available: "2024-04-10", image: "flat4.png" },
+                { id: 5, city: "Phoenix", street: "Central Ave", number: 505, size: 100, hasAC: false, year: 2008, rent: 1450, available: "2024-05-05", image: "flat5.png" },
+                { id: 6, city: "Philadelphia", street: "Market St", number: 606, size: 90, hasAC: true, year: 2003, rent: 1350, available: "2024-06-15", image: "flat6.png" },
+                { id: 7, city: "San Antonio", street: "River Walk", number: 707, size: 120, hasAC: true, year: 2015, rent: 1800, available: "2024-07-20", image: "flat7.png" },
+                { id: 8, city: "San Diego", street: "Pacific Hwy", number: 808, size: 95, hasAC: false, year: 2007, rent: 1550, available: "2024-08-10", image: "flat8.png" },
+                { id: 9, city: "Dallas", street: "Elm St", number: 909, size: 80, hasAC: true, year: 2018, rent: 1600, available: "2024-09-05", image: "flat9.png" },
+                { id: 10, city: "San Jose", street: "Santa Clara", number: 1001, size: 105, hasAC: false, year: 2011, rent: 1500, available: "2024-10-12", image: "flat10.png" },
+                { id: 11, city: "Austin", street: "6th Street", number: 1102, size: 115, hasAC: true, year: 2009, rent: 1700, available: "2024-11-01", image: "flat11.png" },
+                { id: 12, city: "Jacksonville", street: "Bay St", number: 1203, size: 85, hasAC: false, year: 2013, rent: 1400, available: "2024-12-15", image: "flat12.png" },
+                { id: 13, city: "Fort Worth", street: "Main St", number: 1304, size: 95, hasAC: true, year: 2014, rent: 1650, available: "2025-01-05", image: "flat13.png" },
+                { id: 14, city: "Columbus", street: "High St", number: 1405, size: 100, hasAC: false, year: 2016, rent: 1550, available: "2025-02-10", image: "flat14.png" },
+                { id: 15, city: "Charlotte", street: "Tryon St", number: 1506, size: 110, hasAC: true, year: 2017, rent: 1750, available: "2025-03-20", image: "flat15.png" },
+                { id: 16, city: "Detroit", street: "Woodward Ave", number: 1607, size: 90, hasAC: true, year: 2006, rent: 1450, available: "2025-04-25", image: "flat16.png" },
+                { id: 17, city: "El Paso", street: "Mesa St", number: 1708, size: 105, hasAC: false, year: 2004, rent: 1500, available: "2025-05-30", image: "flat17.png" },
+                { id: 18, city: "Memphis", street: "Beale St", number: 1809, size: 120, hasAC: true, year: 2019, rent: 1850, available: "2025-06-15", image: "flat18.png" },
+                { id: 19, city: "Boston", street: "Beacon St", number: 1901, size: 95, hasAC: true, year: 2010, rent: 1600, available: "2025-07-20", image: "flat19.png" },
+                { id: 20, city: "Seattle", street: "Pine St", number: 2002, size: 100, hasAC: false, year: 2012, rent: 1700, available: "2025-08-10", image: "flat20.png" }
+            ];
+
+            const flatsContainer = document.getElementById("flats-container");
+            const favoritesList = document.getElementById("favorites-list");
+
+            let favoriteFlats = []; // Array to store favorite flats
+            let isUserLoggedIn = false; // Set this to true if user is logged in, false otherwise
+
+            // Example: Check if the user is logged in (this can be changed based on your login system)
+            if (localStorage.getItem("userLoggedIn") === "true") {
+                isUserLoggedIn = true;
+            }
+
+            // Function to display flats
+            function displayFlats(filteredFlats) {
+                flatsContainer.innerHTML = '';
+                filteredFlats.forEach(flat => {
+                    const flatElement = document.createElement("div");
+                    flatElement.classList.add("flat-item");
+                    flatElement.innerHTML = `
+                        <img src="${flat.image}" alt="Flat Image" width="200">
+                        <p><strong>City:</strong> ${flat.city}</p>
+                        <p><strong>Size:</strong> ${flat.size} sqm</p>
+                        <p><strong>AC:</strong> ${flat.hasAC ? "Yes" : "No"}</p>
+                        <p><strong>Year Built:</strong> ${flat.year}</p>
+                        <p><strong>Rent:</strong> $${flat.rent}/month</p>
+                        <p><strong>Available:</strong> ${flat.available}</p>
+                        <button class="favorite-btn" data-id="${flat.id}" style="background-color: ${isUserLoggedIn ? '#007bff' : 'red'};">${isUserLoggedIn ? 'Add to Favorites' : 'Add to favorite'}</button>
+                    `;
+                    flatsContainer.appendChild(flatElement);
+                });
+
+                // Add event listener to "Add to Favorites" buttons
+                const favoriteButtons = document.querySelectorAll(".favorite-btn");
+                favoriteButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        if (isUserLoggedIn) {
+                            const flatId = parseInt(this.getAttribute("data-id"));
+                            addToFavorites(flatId);
+                        } else {
+                            alert("Please log in to add to favorites.");
+                        }
+                    });
+                });
+            }
+
+            // Function to add a flat to favorites
+            function addToFavorites(flatId) {
+                const flat = flats.find(f => f.id === flatId);
+                if (flat && !favoriteFlats.includes(flat)) {
+                    favoriteFlats.push(flat);
+                    displayFavorites();
+                }
+            }
+
+            // Function to display favorite flats
+            function displayFavorites() {
+                favoritesList.innerHTML = '';
+                favoriteFlats.forEach(flat => {
+                    const favoriteElement = document.createElement("div");
+                    favoriteElement.classList.add("favorite-item");
+                    favoriteElement.innerHTML = `
+                        <img src="${flat.image}" alt="Favorite Flat Image" width="150">
+                        <p><strong>City:</strong> ${flat.city}</p>
+                        <p><strong>Size:</strong> ${flat.size} sqm</p>
+                        <p><strong>Rent:</strong> $${flat.rent}/month</p>
+                    `;
+                    favoritesList.appendChild(favoriteElement);
+                });
+            }
+
+            // Initial display of all flats
+            displayFlats(flats);
+
+            // Filter functionality
+            document.getElementById("filter-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const city = document.getElementById("city").value;
+const sizeMin = Number(document.getElementById("min-size").value);
+const sizeMax = Number(document.getElementById("max-size").value);
+const ac = document.getElementById("ac").value;
+const yearMin = Number(document.getElementById("min-year").value);
+const yearMax = Number(document.getElementById("max-year").value);
+const rentMin = Number(document.getElementById("min-rent").value);
+const rentMax = Number(document.getElementById("max-rent").value);
+const available = document.getElementById("available-before").value ? new Date(document.getElementById("available-before").value) : null;
+
+const filteredFlats = flats.filter(flat => {
+    return (
+        (city === "all" || flat.city === city) &&
+        (!sizeMin || flat.size >= sizeMin) &&
+        (!sizeMax || flat.size <= sizeMax) &&
+        ((ac === "all" || ac === "") || (ac === "yes" && flat.hasAC) || (ac === "no" && !flat.hasAC)) &&
+        (!yearMin || flat.year >= yearMin) &&
+        (!yearMax || flat.year <= yearMax) &&
+        (!rentMin || flat.rent >= rentMin) &&
+        (!rentMax || flat.rent <= rentMax) &&
+        (!available || new Date(flat.available) <= available) // Convert flat.available to Date if comparing dates
+    );
+
+                });
+
+                displayFlats(filteredFlats);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="css/myprofile.css">
+</head>
+<body>
+    <main>
+        <section class="profile-container">
+            <h2>My Information</h2>
+            <form id="profileForm">
+                <label for="Name"> Name:</label>
+                <input type="text" id="Name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+
+                <button type="submit">Update Profile</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+            const user = JSON.parse(loggedInUser);
+      
+            // Populate the form fields with the user's information
+            document.getElementById('Name').value = user.name;  // <-- changed to user.name
+            document.getElementById('email').value = user.email;
+            document.getElementById('age').value = user.age;
+            document.getElementById('password').value = user.password;
+        } else {
+            alert('No user is logged in.');
+            window.location.href = 'login.html'; 
+        }
+      
+        document.getElementById('profileForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+      
+            // Get form values
+            const name = document.getElementById('Name').value.trim();  // <-- using lowercase variable
+            const email = document.getElementById('email').value.trim();
+            const age = document.getElementById('age').value;
+            const password = document.getElementById('password').value;
+      
+            // Basic validation
+            if (!name || !email || !age || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
+      
+            // Update the user data in localStorage
+            const updatedUser = { firstName, email, age, password }; // <-- store as 'name' 
+            localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+      
+            alert('Profile updated successfully!');
+        });
+      </script>      
+</body>
+</html>

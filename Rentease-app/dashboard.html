@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - RentEase</title>
+    <link rel="stylesheet" href="css/loginPage.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to RentEase</h1>
+        <nav>
+            <a href="MySpace.html">MySpace</a>
+            <a href="myprofile.html">My Profile</a>
+            <button id="logout-btn" style="display: none;">Logout</button>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="dashboard-container">
+            <h2>Welcome, <span id="userEmail">Guest</span></h2>
+            <p>Explore our wide variety of rental properties and make your best choice!</p>
+        </section>
+
+        <!-- Filter Section -->
+        <section id="filter-section">
+            <h3>Filter Flats</h3>
+            <form id="filter-form">
+                <label for="filter-city">City:</label>
+                <input type="text" id="filter-city" placeholder="Enter city" />
+                
+                <label for="filter-min-rent">Min Rent:</label>
+                <input type="number" id="filter-min-rent" placeholder="Min Rent" />
+                
+                <label for="filter-max-rent">Max Rent:</label>
+                <input type="number" id="filter-max-rent" placeholder="Max Rent" />
+                
+                <label for="filter-ac">AC:</label>
+                <select id="filter-ac">
+                    <option value="">Any</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                
+                <button type="submit">Apply Filter</button>
+            </form>
+        </section>
+
+        <!-- Add Flat Section -->
+        <section id="add-flat-section">
+            <h3>Add a New Flat</h3>
+            <form id="add-flat-form">
+                <label for="add-city">City:</label>
+                <input type="text" id="add-city" required />
+                
+                <label for="add-street">Street:</label>
+                <input type="text" id="add-street" required />
+                
+                <label for="add-number">Number:</label>
+                <input type="number" id="add-number" required />
+                
+                <label for="add-size">Size (sqm):</label>
+                <input type="number" id="add-size" required />
+                
+                <label for="add-rent">Rent:</label>
+                <input type="number" id="add-rent" required />
+                
+                <label for="add-ac">Has AC:</label>
+                <select id="add-ac">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+
+                <!-- Image Upload -->
+                <label for="add-image">Upload Image:</label>
+                <input type="file" id="add-image" accept="image/*" required />
+
+                <button type="submit">Add Flat</button>
+            </form>
+        </section>
+
+        <!-- Flat List Section -->
+        <section id="flat-list">
+            <h3>Available Flats</h3>
+            <div id="flats-container"></div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            const userEmail = document.getElementById("userEmail");
+            const logoutBtn = document.getElementById("logout-btn");
+    
+            let user = null;
+            if (loggedInUser) {
+                user = JSON.parse(loggedInUser);
+                userEmail.textContent = user.name;
+                logoutBtn.style.display = "inline-block";
+            } else {
+                userEmail.textContent = "Guest";
+                logoutBtn.style.display = "none";
+            }
+    
+            logoutBtn.addEventListener("click", function() {
+                localStorage.removeItem("loggedInUser");
+                alert("You have been logged out.");
+                window.location.href = "Main Page.html";
+            });
+    
+            // Flats Data
+            const flats = [
+                { id: 1, city: "New York", street: "Broadway", number: 101, size: 75, hasAC: true, year: 2001, rent: 1400, available: "2024-01-15", image: "flat1.png" },
+                { id: 2, city: "Los Angeles", street: "Sunset Blvd", number: 202, size: 95, hasAC: false, year: 2005, rent: 1600, available: "2024-02-20", image: "flat2.png" },
+                { id: 3, city: "Chicago", street: "Michigan Ave", number: 303, size: 85, hasAC: true, year: 2010, rent: 1500, available: "2024-03-25", image: "flat3.png" },
+                { id: 4, city: "Houston", street: "Main St", number: 404, size: 110, hasAC: true, year: 2012, rent: 1700, available: "2024-04-10", image: "flat4.png" },
+                { id: 5, city: "Phoenix", street: "Central Ave", number: 505, size: 100, hasAC: false, year: 2008, rent: 1450, available: "2024-05-05", image: "flat5.png" },
+                { id: 6, city: "Philadelphia", street: "Market St", number: 606, size: 90, hasAC: true, year: 2003, rent: 1350, available: "2024-06-15", image: "flat6.png" },
+                { id: 7, city: "San Antonio", street: "River Walk", number: 707, size: 120, hasAC: true, year: 2015, rent: 1800, available: "2024-07-20", image: "flat7.png" },
+                { id: 8, city: "San Diego", street: "Pacific Hwy", number: 808, size: 95, hasAC: false, year: 2007, rent: 1550, available: "2024-08-10", image: "flat8.png" },
+                { id: 9, city: "Dallas", street: "Elm St", number: 909, size: 80, hasAC: true, year: 2018, rent: 1600, available: "2024-09-05", image: "flat9.png" },
+                { id: 10, city: "San Jose", street: "Santa Clara", number: 1001, size: 105, hasAC: false, year: 2011, rent: 1500, available: "2024-10-12", image: "flat10.png" },
+                { id: 11, city: "Austin", street: "6th Street", number: 1102, size: 115, hasAC: true, year: 2009, rent: 1700, available: "2024-11-01", image: "flat11.png" },
+                { id: 12, city: "Jacksonville", street: "Bay St", number: 1203, size: 85, hasAC: false, year: 2013, rent: 1400, available: "2024-12-15", image: "flat12.png" },
+                { id: 13, city: "Fort Worth", street: "Main St", number: 1304, size: 95, hasAC: true, year: 2014, rent: 1650, available: "2025-01-05", image: "flat13.png" },
+                { id: 14, city: "Columbus", street: "High St", number: 1405, size: 100, hasAC: false, year: 2016, rent: 1550, available: "2025-02-10", image: "flat14.png" },
+                { id: 15, city: "Charlotte", street: "Tryon St", number: 1506, size: 110, hasAC: true, year: 2017, rent: 1750, available: "2025-03-20", image: "flat15.png" },
+                { id: 16, city: "Detroit", street: "Woodward Ave", number: 1607, size: 90, hasAC: true, year: 2006, rent: 1450, available: "2025-04-25", image: "flat16.png" },
+                { id: 17, city: "El Paso", street: "Mesa St", number: 1708, size: 105, hasAC: false, year: 2004, rent: 1500, available: "2025-05-30", image: "flat17.png" },
+                { id: 18, city: "Memphis", street: "Beale St", number: 1809, size: 120, hasAC: true, year: 2019, rent: 1850, available: "2025-06-15", image: "flat18.png" },
+                { id: 19, city: "Boston", street: "Beacon St", number: 1901, size: 95, hasAC: true, year: 2010, rent: 1600, available: "2025-07-20", image: "flat19.png" },
+                { id: 20, city: "Seattle", street: "Pine St", number: 2002, size: 100, hasAC: false, year: 2012, rent: 1700, available: "2025-08-10", image: "flat20.png" }
+            
+                // ... Add other flats as necessary
+            ];
+    
+            const flatsContainer = document.getElementById("flats-container");
+    
+            function renderFlats(filteredFlats) {
+                flatsContainer.innerHTML = "";
+                filteredFlats.forEach(flat => {
+                    const flatElement = document.createElement("div");
+                    flatElement.classList.add("flat-item");
+                    flatElement.innerHTML = `
+                        <img src="${flat.image}" alt="Flat Image" width="200">
+                        <p><strong>City:</strong> ${flat.city}</p>
+                        <p><strong>Street:</strong> ${flat.street} ${flat.number}</p>
+                        <p><strong>Size:</strong> ${flat.size} sqm</p>
+                        <p><strong>Rent:</strong> $${flat.rent}/month</p>
+                        <button class="favorite-btn" data-id="${flat.id}">Add to Favorites</button>
+                    `;
+                    flatsContainer.appendChild(flatElement);
+                });
+    
+                // Add event listener to "Add to Favorites" buttons
+                const favoriteButtons = document.querySelectorAll(".favorite-btn");
+                favoriteButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        const flatId = button.getAttribute("data-id");
+                        const favoriteFlat = flats.find(flat => flat.id == flatId);
+    
+                        // Retrieve the user's favorites from localStorage or initialize an empty array
+                        const loggedInUser = localStorage.getItem("loggedInUser");
+                        const user = loggedInUser ? JSON.parse(loggedInUser) : null;
+
+                        if (user) {
+                            const favoritesKey = `favorites_${user.email}`;
+                            const favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+
+                            // Check if the flat is already in favorites
+                            if (!favorites.some(flat => flat.id === favoriteFlat.id)) {
+                                favorites.push(favoriteFlat);
+                                localStorage.setItem(favoritesKey, JSON.stringify(favorites));
+                                alert(`${favoriteFlat.city} - ${favoriteFlat.street} added to favorites!`);
+                            } else {
+                                alert("This flat is already in your favorites.");
+                            }
+                        }
+                    });
+                });
+            }
+    
+            renderFlats(flats);
+    
+            // Filter flats
+            const filterForm = document.getElementById("filter-form");
+            filterForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+    
+                const city = document.getElementById("filter-city").value.toLowerCase();
+                const minRent = parseInt(document.getElementById("filter-min-rent").value) || 0;
+                const maxRent = parseInt(document.getElementById("filter-max-rent").value) || Infinity;
+                const ac = document.getElementById("filter-ac").value;
+    
+                const filteredFlats = flats.filter(flat => {
+                    return (
+        (city === "all" || flat.city === city) &&
+         ((ac === "all" || ac === "") || (ac === "yes" && flat.hasAC) || (ac === "no" && !flat.hasAC)) &&
+        (!rentMin || flat.rent >= rentMin) &&
+        (!rentMax || flat.rent <= rentMax))
+                });
+    
+                renderFlats(filteredFlats);
+            });
+    
+            // Add a new flat
+            const addFlatForm = document.getElementById("add-flat-form");
+            addFlatForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+    
+                const newFlat = {
+                    id: flats.length + 1,
+                    city: document.getElementById("add-city").value,
+                    street: document.getElementById("add-street").value,
+                    number: parseInt(document.getElementById("add-number").value),
+                    size: parseInt(document.getElementById("add-size").value),
+                    rent: parseInt(document.getElementById("add-rent").value),
+                    hasAC: document.getElementById("add-ac").value === "true",
+                    image: "newFlat.png", // You can update this based on user input for image URL
+                    available: new Date().toISOString().split("T")[0]
+                };
+    
+                flats.push(newFlat);
+                renderFlats(flats);
+                alert("New flat added!");
+            });
+        });
+    </script>    
+</body>
+</html>
